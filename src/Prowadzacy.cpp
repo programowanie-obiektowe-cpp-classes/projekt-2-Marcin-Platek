@@ -21,16 +21,21 @@ bool Prowadzacy::czyMoznaPrzypisacDoZajec(int godziny) const {
 // przypisuje do zajęć, jeśli nie przekroczy pensum
 void Prowadzacy::przypiszDoZajec(shared_ptr<Zajecia> zajecia) {
     int godziny = zajecia->getLiczbaGodzin();
-    if (czyMoznaPrzypisacDoZajec(godziny)) {
+    if (!czyMoznaPrzypisacDoZajec(godziny)) {
+        throw runtime_error("Przekroczono pensum dla prowadzacego: " + m_imie + " " + m_nazwisko);      // wyjatek - uzywamy wyjatku zamiast jedynie wyswietlac blad
+    }
+
         m_aktualne_pensum += godziny;
         m_zajecia.push_back(zajecia);
         cout << "Prowadzacy " << m_imie << " " << m_nazwisko << " zostal przypisany do zajec: " 
              << zajecia->getNazwa() << "\n";
-    } else {
-        cout << "Nie mozna przypisac prowadzacego " << m_imie << " " << m_nazwisko 
-             << " - przekroczone pensum (" << m_aktualne_pensum << "/" << m_max_pensum << " godzin)\n";
-    }
-}
+} 
+    
+    //else {
+    //    cout << "Nie mozna przypisac prowadzacego " << m_imie << " " << m_nazwisko 
+    //         << " - przekroczone pensum (" << m_aktualne_pensum << "/" << m_max_pensum << " godzin)\n";
+    //}
+//}
 
 
 // wyświetla info o danym prowadzącym
@@ -71,6 +76,8 @@ string Prowadzacy::getNazwisko() const {
 int Prowadzacy::getAktualnePensum() const {
     return m_aktualne_pensum;
 }
+
+// Implementacja klas dziedziczących
 
 // Implementacja klasy Profesor
 Profesor::Profesor(const string& tytul, const string& imie, const string& nazwisko)

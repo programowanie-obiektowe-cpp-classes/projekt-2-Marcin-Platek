@@ -93,6 +93,21 @@ void Dziekanat::przypiszProwadzacegoDoZajec(const string& imie, const string& na
     auto zaj = find_if(m_zajecia.begin(), m_zajecia.end(),
         [&nazwa_zajec](const shared_ptr<Zajecia>& z) { return z->getNazwa() == nazwa_zajec; });
 
+    // Tutaj powprowadzamy wyjatki zamiast wyrzucania komunikatu o błędach - nowa implementacja kodu
+    if (prow == m_prowadzacy.end()) {
+        throw runtime_error("Blad: Nie znaleziono prowadzacego " + imie + " " + nazwisko);
+    }
+
+    if (zaj == m_zajecia.end()) {
+        throw runtime_error("Blad: Nie znaleziono zajecia " + nazwa_zajec);
+    }
+
+    if (!(*prow)->czyMoznaPrzypisacDoZajec((*zaj)->getLiczbaGodzin())) {
+        throw runtime_error("Blad: Prowadzacy " + imie + " " + nazwisko + " przekroczyl pensum i nie moze prowadzic zajec " + nazwa_zajec);
+    }
+
+    // Stara implementacja kodu
+    /*
     if (prow == m_prowadzacy.end()) {
         cout << "\nNie znaleziono prowadzacego: " << imie << " " << nazwisko << "\n";
         return;
@@ -109,6 +124,7 @@ void Dziekanat::przypiszProwadzacegoDoZajec(const string& imie, const string& na
              << " z powodu przekroczenia pensum.\n";
         return;
     }
+    */
 
     (*zaj)->przypiszProwadzacego(*prow);
     cout << "\nProwadzacy " << imie << " " << nazwisko << " zostal przypisany do zajec: " << nazwa_zajec << "\n";

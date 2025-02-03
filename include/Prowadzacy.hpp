@@ -40,6 +40,9 @@ public:
     int getAktualnePensum() const;
 };
 
+// klasy pochodne
+
+
 // Klasa Profesor
 class Profesor : public Prowadzacy {
 public:

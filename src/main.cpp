@@ -26,25 +26,41 @@ int main() {
 
     Dziekanat dziekanat;
 
-    dziekanat.wczytajDaneZXML("dane_projekt_dziekanat.xml");
+    //zastosowanie wyłapywania wyjątków przy wczytywaniu z XML
+    try{
+        dziekanat.wczytajDaneZXML("dane_projekt_dziekanat.xml");
+    }
+    catch(const exception& e){
+        cerr << "Blad podczas wczytywania danych z pliku XML: "<<e.what()<<endl;
+    }
 
-    dziekanat.dodajStudenta("Jan", "Kowalski", 12345);
-    dziekanat.dodajStudenta("Anna", "Nowak", 54321);
-    dziekanat.dodajStudenta("Marcin", "Platek", 314750);
-    dziekanat.dodajStudenta("Tomek", "Polski", 313420);
+
+    // Dodawanie przykładowych danych z łapaniem wyjątków
+    try {
+
+        dziekanat.dodajStudenta("Jan", "Kowalski", 12345);
+        dziekanat.dodajStudenta("Anna", "Nowak", 54321);
+        dziekanat.dodajStudenta("Marcin", "Platek", 314750);
+        dziekanat.dodajStudenta("Tomek", "Polski", 313420);
     
-    dziekanat.dodajProwadzacego(make_shared<Profesor>("Dr ", "Jan", "Nowak"));
-    dziekanat.dodajProwadzacego(make_shared<Doktorant>("Mgr ", "Piotr", "Kowal"));
-    dziekanat.dodajProwadzacego(make_shared<Profesor>("Prof.", "Janusz", "Piechna"));
+        dziekanat.dodajProwadzacego(make_shared<Profesor>("Dr ", "Jan", "Nowak"));
+        dziekanat.dodajProwadzacego(make_shared<Doktorant>("Mgr ", "Piotr", "Kowal"));
+        dziekanat.dodajProwadzacego(make_shared<Profesor>("Prof.", "Janusz", "Piechna"));
 
-    dziekanat.dodajZajecia("Matematyka", "wyklad", 60);
-    dziekanat.dodajZajecia("Fizyka", "cwiczenia", 20);
-    dziekanat.dodajZajecia("Laby_c++", "laby", 10);
-    dziekanat.dodajZajecia("Aerodynamika", "potop", 30);
+        dziekanat.dodajZajecia("Matematyka", "wyklad", 60);
+        dziekanat.dodajZajecia("Fizyka", "cwiczenia", 20);
+        dziekanat.dodajZajecia("Laby_c++", "laby", 10);
+        dziekanat.dodajZajecia("Aerodynamika", "potop", 30);
 
-    dziekanat.przypiszProwadzacegoDoZajec("Jan", "Nowak", "Matematyka");
-    dziekanat.przypiszProwadzacegoDoZajec("Piotr", "Kowal", "Fizyka");
-    dziekanat.przypiszProwadzacegoDoZajec("Anna", "Lewandowska", "Aerodynamika");
+        dziekanat.przypiszProwadzacegoDoZajec("Jan", "Nowak", "Matematyka");
+        dziekanat.przypiszProwadzacegoDoZajec("Piotr", "Kowal", "Fizyka");
+        dziekanat.przypiszProwadzacegoDoZajec("Anna", "Lewandowska", "Aerodynamika");
+    }    
+
+    //łapanie wyjątków w wprowadzonych (zadanych) danych
+    catch(const exception& e){
+        cerr <<"Blad: "<<e.what()<<endl;
+    }
 
     int opcja;
     do {
@@ -94,7 +110,13 @@ int main() {
                 cin.ignore();
                 getline(cin, nazwa_zajec);
 
-                dziekanat.przypiszProwadzacegoDoZajec(imie, nazwisko, nazwa_zajec);
+                //wyłapywanie wyjątków przy dodawaniu prowadzącego do zajęć:
+                try {
+                    dziekanat.przypiszProwadzacegoDoZajec(imie, nazwisko, nazwa_zajec);
+                }
+                catch (const exception& e){
+                    cerr <<"Blad: "<<e.what()<<endl;
+                }
                 break;
             }
 
@@ -123,9 +145,17 @@ int main() {
                 cin.ignore();
                 getline(cin, nazwaZajec);
                 cout<<endl;
-                dziekanat.zapiszStudentaNaZajecia(indeks, nazwaZajec);
+
+                //kolejne wyłapywanie przy zapisywaniu studenta na zajecia
+                try{
+                    dziekanat.zapiszStudentaNaZajecia(indeks, nazwaZajec);
+                }
+                catch(const exception& e){
+                    cerr <<"Blad: "<<e.what()<<endl;
+                }
                 break;
             }
+
             case 6: {
                 int indeks;
                 string nazwaZajec;
@@ -139,7 +169,14 @@ int main() {
                 cin.ignore();
                 getline(cin, nazwaZajec);
                 cout<<endl;
-                dziekanat.wypiszStudentaZajecia(indeks, nazwaZajec);
+
+                //i kolejne wyłapywanie przy zapisywaniu studenta na zajęcia
+                try{
+                    dziekanat.wypiszStudentaZajecia(indeks, nazwaZajec);
+                }
+                catch(const exception& e){
+                    cerr << "Blad: " << e.what() << endl;
+                }
                 break;
             }
             case 7: {
